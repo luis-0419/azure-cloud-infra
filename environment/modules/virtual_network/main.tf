@@ -1,12 +1,19 @@
 resource "azurerm_virtual_network" "virtual_network" {
 
   name                = var.name
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+  location            = var.location
+  resource_group_name = var.resource_group_name
   address_space       = ["10.0.0.0/16"]
+  depends_on = [ 
+    var.resource_group_name
+   ]
+}
 
-  subnet {
-    name           = "subnet1"
-    address_prefix = "10.0.1.0/24"
-  }
+resource "azurerm_subnet" "subnet" {
+  
+  for_each = { for subnet in var.subnets : subnet.name => subnet }
+
+  name                = each.name
+  resource_group_name = var.resource_group_name
+  address_prefix      = each.value.address_prefix
 }

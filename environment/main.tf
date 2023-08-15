@@ -24,6 +24,7 @@ resource "azurerm_resource_group" "rg" {
 
 module "virtual_network" {
   source = "./modules/virtual_network"
+  
 }
 
 module "virtual_machine_linux" {
