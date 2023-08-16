@@ -23,8 +23,15 @@ resource "azurerm_resource_group" "rg" {
 }
 
 module "virtual_network" {
-  source = "./modules/virtual_network"
-  
+  source              = "./modules/virtual_network"
+  name                = var.virtual_network_name
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  address_space       = []
+
+  subnets = [
+
+  ]
 }
 
 module "virtual_machine_linux" {
@@ -45,4 +52,16 @@ module "storage_account" {
 
 module "mssql" {
   source = "./modules/mssql"
+}
+
+module "application_gateway" {
+  source = "./modules/application_gateway"
+}
+
+module "app_services" {
+  source = "./modules/app_services"
+}
+
+module "key_vault" {
+  source = "./modules/key_vault"
 }

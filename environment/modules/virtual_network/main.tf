@@ -7,6 +7,9 @@ resource "azurerm_virtual_network" "virtual_network" {
   depends_on = [ 
     var.resource_group_name
    ]
+  tags = {
+    Environment = var.environment_name
+  }
 }
 
 resource "azurerm_subnet" "subnet" {
