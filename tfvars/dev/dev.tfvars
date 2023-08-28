@@ -1,2 +1,6 @@
 resource_group_name = "az-rg-resources"
 location            = "West Europe"
+storage_account_type = "Standard_LRS"
+size                = "Standard_F2"
+username            = "lmadmin"
+password            = "P@$$w0rd1234567@@!"
