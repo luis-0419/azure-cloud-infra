@@ -1,13 +1,13 @@
 resource "azurerm_kubernetes_cluster" "kubernetes_cluster" {
-  name                = "example-aks1"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
-  dns_prefix          = "exampleaks1"
+  name                = var.name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  dns_prefix          = "aks1"
 
   default_node_pool {
-    name       = "default"
-    node_count = 2
-    vm_size    = "Standard_D2_v2"
+    name       = "${var.name}-default"
+    node_count = var.node_count
+    vm_size    = var.vm_size
   }
 
   identity {

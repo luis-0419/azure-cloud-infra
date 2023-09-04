@@ -1,18 +1,18 @@
-resource "azurerm_storage_account" "example" {
-  name                = "storageaccountname"
-  resource_group_name = azurerm_resource_group.example.name
+resource "azurerm_storage_account" "storage_account" {
+  name                = var.name
+  resource_group_name = var.resource_group_name
 
-  location                 = azurerm_resource_group.example.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
+  location                 = var.location
+  account_tier             = var.account_tier
+  account_replication_type = var.account_replication_type
 
   network_rules {
     default_action             = "Deny"
     ip_rules                   = ["100.0.0.1"]
-    virtual_network_subnet_ids = [azurerm_subnet.example.id]
+    virtual_network_subnet_ids = [var.subnet_id]
   }
 
   tags = {
-    environment = "staging"
+    environment = var.environment
   }
 }

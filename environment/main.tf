@@ -49,6 +49,11 @@ module "virtual_network" {
       name : var.snet_key_vault_name
       address_prefix : var.snet_key_vault_address_prefix
       services_endpoint : []
+    },
+    {
+      name : var.snet_storage_account_name
+      address_prefix : var.snet_key_vault_address_prefix
+      services_endpoint : []
     }
   ]
 }
@@ -78,11 +83,21 @@ module "virtual_machine_win" {
 }
 
 module "aks" {
-  source = "./modules/aks"
+  source              = "./modules/aks"
+  name                = "${var.aks_name}-${var.environment}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  node_count          = var.node_count
+  vm_size             = var.size
+  environment_name    = var.environment
 }
 
 module "storage_account" {
-  source = "./modules/storage_account"
+  source              = "./modules/storage_account"
+  name                = var.name
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  subnet_id           = module.virtual_network.id[var.snet_storage_account_name]
 }
 
 module "mssql" {
