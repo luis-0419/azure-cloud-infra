@@ -6,6 +6,10 @@ variable "location" {
   type = string
 }
 
+variable "environment_name" {
+  type = string
+}
+
 variable "virtual_network_name" {
   type = string
 }

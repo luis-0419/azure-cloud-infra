@@ -1,35 +1,35 @@
-resource "azurerm_public_ip" "private_ip_address_allocation" {
-  name                = "example-pip"
-  resource_group_name = azurerm_resource_group.example.name
-  location            = azurerm_resource_group.example.location
+resource "azurerm_public_ip" "pip" {
+  name                = "pip-${var.name}"
+  resource_group_name = var.resource_group_name
+  location            = var.location
   allocation_method   = "Dynamic"
 }
 
 # since these variables are re-used - a locals block makes this more maintainable
 locals {
-  backend_address_pool_name      = "${azurerm_virtual_network.example.name}-beap"
-  frontend_port_name             = "${azurerm_virtual_network.example.name}-feport"
-  frontend_ip_configuration_name = "${azurerm_virtual_network.example.name}-feip"
-  http_setting_name              = "${azurerm_virtual_network.example.name}-be-htst"
-  listener_name                  = "${azurerm_virtual_network.example.name}-httplstn"
-  request_routing_rule_name      = "${azurerm_virtual_network.example.name}-rqrt"
-  redirect_configuration_name    = "${azurerm_virtual_network.example.name}-rdrcfg"
+  backend_address_pool_name      = "${var.virtual_network_name}-beap"
+  frontend_port_name             = "${var.virtual_network_name}-feport"
+  frontend_ip_configuration_name = "${var.virtual_network_name}-feip"
+  http_setting_name              = "${var.virtual_network_name}-be-htst"
+  listener_name                  = "${var.virtual_network_name}-httplstn"
+  request_routing_rule_name      = "${var.virtual_network_name}-rqrt"
+  redirect_configuration_name    = "${var.virtual_network_name}-rdrcfg"
 }
 
-resource "azurerm_application_gateway" "network" {
-  name                = "example-appgateway"
-  resource_group_name = azurerm_resource_group.example.name
-  location            = azurerm_resource_group.example.location
+resource "azurerm_application_gateway" "agw" {
+  name                = var.name
+  resource_group_name = var.resource_group_name
+  location            = var.location
 
   sku {
     name     = "Standard_Small"
-    tier     = "Standard"
-    capacity = 2
+    tier     = var.tier
+    capacity = var.capacity
   }
 
   gateway_ip_configuration {
-    name      = "my-gateway-ip-configuration"
-    subnet_id = azurerm_subnet.frontend.id
+    name      = "${var.name}-ip-configuration"
+    subnet_id = var.subnet_id
   }
 
   frontend_port {
@@ -39,7 +39,7 @@ resource "azurerm_application_gateway" "network" {
 
   frontend_ip_configuration {
     name                 = local.frontend_ip_configuration_name
-    public_ip_address_id = azurerm_public_ip.example.id
+    public_ip_address_id = azurerm_public_ip.pip.id
   }
 
   backend_address_pool {
